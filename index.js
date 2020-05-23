@@ -1,7 +1,7 @@
 const express = require ('express');
 const socketio =require('socket.io');
 const http = require('http');
-
+const cors= require('cors');
 const {addUser,removeUser,getUser,getUserRoom} = require('./users');
 
 const PORT =process.env.port || 5000;
@@ -12,6 +12,7 @@ const router = require('./router');
 const server = http.createServer(app);
 const io = socketio(server);
 
+app.use(cors());
 
 io.on('connection', (socket) => {
     
