@@ -30,27 +30,22 @@ io.on('connection', (socket) => {
         callback();
     });
 
-    socket.on('sendMessage', (message) => {
-        const user = getUser(socket.id);
-
-        io.to(user.room).emit('message', { user: user.name, text: message });
-        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
-
-
-        callback();
+    socket.on('sendMessage', (message, callback) => {
+      const user = getUser(socket.id);
+  
+      io.to(user.room).emit('message', { user: user.name, text: message });
+  
+      callback();
     });
-
+  
     socket.on('disconnect', () => {
       const user = removeUser(socket.id);
-      
+  
       if(user) {
         io.to(user.room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
         
       }
     })
-});
-
-
-app.use(router);
-
-server.listen(PORT, () => console.log(`server started ${PORT}`));
+  });
+  
+  server.listen(process.env.PORT || 5000, () => console.log(`Server has started.`));
